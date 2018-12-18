@@ -1,0 +1,22 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: create-elk-snapshot-repo
+  namespace: {{ k8s_namespace }}
+spec:
+  template:
+    metadata:
+      name: create-elk-snapshot-repo
+    spec:
+      containers:
+      - name: create-elk-snapshot-repo
+        image: appropriate/curl
+        command: ["sh",  "/etc/curl/curl.sh"]
+        volumeMounts:
+        - name: create-elk-snapshot-repo
+          mountPath: /etc/curl
+      restartPolicy: OnFailure
+      volumes:
+      - name: create-elk-snapshot-repo
+        configMap:
+          name: create-elk-snapshot-repo

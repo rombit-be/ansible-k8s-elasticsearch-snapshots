@@ -1,0 +1,18 @@
+- name: Cleanup kubernetes folder
+  file:
+    state: absent
+    path: "kubernetes/logstash-snapshot-repo-config"
+- file:
+    path: kubernetes/logstash-snapshot-repo-config
+    state: directory
+
+
+- name: prepare templates
+  template:
+    src: "{{ item }}"
+    dest: kubernetes/logstash-snapshot-repo-config/{{ item | basename | regex_replace('\.j2','') }}
+  with_fileglob:
+    - ../templates/logstash-snapshot-repo-config/*.j2
+
+- name: Deploy logstash-snapshot-repo-config
+  command: "kubectl apply -f kubernetes/logstash-snapshot-repo-config -n {{ k8s_namespace }}"

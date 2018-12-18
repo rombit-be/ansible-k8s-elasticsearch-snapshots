@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: create-elk-snapshot-repo
+  namespace: {{ k8s_namespace }}
+data:
+  curl.sh: |
+    #!/bin/bash
+    set -e
+    curl -XPUT 'http://elasticsearch:9200/_snapshot/s3-backup' \
+      -H "Content-Type: application/json" \
+      -d '{
+        "type": "s3",
+        "settings": {
+          "bucket": "{{ logstash_backup }}",
+          "base_path": "{{ logstash_backup_base_path }}",
+          "region": "eu-west-1"
+        }
+      }' --fail

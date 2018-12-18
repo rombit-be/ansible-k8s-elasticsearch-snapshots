@@ -1,0 +1,27 @@
+apiVersion: batch/v1beta1
+kind: CronJob
+metadata:
+  name: snapshot-cronjob
+  namespace: {{ k8s_namespace }}
+spec:
+  schedule: 1 0 * * *
+  concurrencyPolicy: Forbid
+  jobTemplate:
+    spec:
+      template:
+        metadata:
+          labels:
+            app: curator
+        spec:
+          containers:
+          - name: curator
+            image: bobrik/curator:5.5.1
+            args: ["--config", "/etc/config/config.yml", "/etc/config/action_file.yml"]
+            volumeMounts:
+              - name: config-volume
+                mountPath: /etc/config
+          volumes:
+            - name: config-volume
+              configMap:
+                name: snapshot-cronjob-config
+          restartPolicy: OnFailure

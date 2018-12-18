@@ -1,0 +1,5 @@
+logstash_backup_base_path: "k8s-{{ cluster_name }}"
+k8s_namespace: ""
+logstash_backup: "logstash-backups"
+curator_older_than_unit: days
+curator_older_than_unit_count: 12

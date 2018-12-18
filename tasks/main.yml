@@ -1,0 +1,7 @@
+- name: repo config
+  include: repo-config.yml
+  tags: logstash-repo-config
+
+- name: snapshot
+  include: snapshot.yml
+  tags: elk-snapshot
